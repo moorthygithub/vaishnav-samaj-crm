@@ -18,6 +18,7 @@ const MemberList = ({ title, userTypeFilter }) => {
     userImageBase: "",
     noImage: "",
   });
+  console.log(users, "usersusers");
 
   const fetchUser = async () => {
     const res = await trigger({
@@ -25,7 +26,7 @@ const MemberList = ({ title, userTypeFilter }) => {
     });
     if (Array.isArray(res.data)) {
       const filtered = res.data.filter(
-        (user) => user.user_member_type == userTypeFilter
+        (user) => user.category == userTypeFilter
       );
       setUsers(filtered);
 
@@ -48,11 +49,11 @@ const MemberList = ({ title, userTypeFilter }) => {
   }, [userTypeFilter]);
   const handleToggleStatus = async (user) => {
     try {
-      const newStatus = user.is_active == "active" ? "inactive" : "active";
+      const newStatus = user.user_status == "Active" ? "Inactive" : "Active";
       const res = await trigger({
         url: `${UPDATE_USER_STATUS}/${user.id}`,
         method: "put",
-        data: { is_active: newStatus },
+        data: { user_status: newStatus },
       });
 
       if (res?.code === 201) {
@@ -91,7 +92,7 @@ const MemberList = ({ title, userTypeFilter }) => {
 
         <div className="flex-1 flex gap-4 sm:justify-end">
           <Search
-            placeholder="Search member"
+            placeholder={`Search ${title}`}
             allowClear
             onChange={(e) => setSearchTerm(e.target.value.toLowerCase())}
             className="max-w-sm"

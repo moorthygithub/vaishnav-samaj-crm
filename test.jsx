@@ -1,0 +1,9 @@
+// "name":"",
+// "mobile":"",
+// "email":"",
+// "gnati":"",
+// "user_dob":"",
+// "gender":"",
+// "category":"",
+// "address":"",
+// "user_image":""

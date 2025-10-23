@@ -19,7 +19,7 @@ import CardHeader from "../../components/common/CardHeader";
 import CropImageModal from "../../components/common/CropImageModal";
 import membershipTypes from "../../components/json/membershipTypes.json";
 import { useApiMutation } from "../../hooks/useApiMutation";
-const NewRegisterationForm = () => {
+const MemberForm = () => {
   const { memberId } = useParams();
   const { message } = App.useApp();
   const [form] = Form.useForm();
@@ -31,10 +31,7 @@ const NewRegisterationForm = () => {
     file: null,
     preview: "",
   });
-  const [spouseImageInfo, setSpouseImageInfo] = useState({
-    file: null,
-    preview: "",
-  });
+
   const [cropState, setCropState] = useState({
     modalVisible: false,
     imageSrc: null,
@@ -56,10 +53,7 @@ const NewRegisterationForm = () => {
       };
       mappedData = {
         ...member,
-        user_full_name: member.name,
-        user_mobile: member.mobile,
-        user_email: member.email,
-        user_status: member.is_active,
+        user_status: member.user_status == "Active" ? true : false,
       };
       setInitialData(mappedData);
 
@@ -73,19 +67,10 @@ const NewRegisterationForm = () => {
           preview: `${userImageBase}${member.user_image}`,
         });
       }
-      if (member.spouse_image && userImageBase) {
-        setSpouseImageInfo({
-          file: null,
-          preview: `${userImageBase}${member.spouse_image}`,
-        });
-      }
 
       form.setFieldsValue({
         ...mappedData,
         user_dob: member.user_dob ? dayjs(member.user_dob) : null,
-        user_spouse_dob: member.user_spouse_dob
-          ? dayjs(member.user_spouse_dob)
-          : null,
       });
     } catch (err) {
       console.error("Fetch error:", err);
@@ -103,42 +88,26 @@ const NewRegisterationForm = () => {
   const handleSubmit = async (values) => {
     try {
       const formData = new FormData();
-      formData.append("user_full_name", values.user_full_name?.trim() || "");
+      formData.append("name", values.name?.trim() || "");
       formData.append(
         "user_dob",
         values.user_dob ? values.user_dob.format("YYYY-MM-DD") : ""
       );
-      formData.append("user_mobile", values.user_mobile?.trim() || "");
-      formData.append("user_whatsapp", values.user_whatsapp?.trim() || "");
-      formData.append("user_email", values.user_email?.trim() || "");
-      formData.append("user_add", values.user_add?.trim() || "");
-      formData.append(
-        "user_spouse_name",
-        values.user_spouse_name?.trim() || ""
-      );
-      formData.append(
-        "user_spouse_mobile",
-        values.user_spouse_mobile?.trim() || ""
-      );
-      formData.append(
-        "user_spouse_dob",
-        values.user_spouse_dob
-          ? values.user_spouse_dob.format("YYYY-MM-DD")
-          : ""
-      );
-      formData.append("user_member_type", values.user_member_type || "");
-      formData.append("user_cat", values.user_cat || "");
+      formData.append("gender", values.gender?.trim() || "");
+      formData.append("mobile", values.mobile?.trim() || "");
+      formData.append("email", values.email?.trim() || "");
+      formData.append("address", values.address?.trim() || "");
+      formData.append("gnati", values.gnati?.trim() || "");
+
+      formData.append("category", values.category || "");
       formData.append(
         "user_status",
-        values.user_status ? "active" : "inactive"
+        values.user_status ? "Active" : "Inactive"
       );
       if (userImageInfo.file) {
         formData.append("user_image", userImageInfo.file);
       }
 
-      if (spouseImageInfo.file) {
-        formData.append("spouse_image", spouseImageInfo.file);
-      }
       const res = await submitTrigger({
         url: `${UPDATE_MEMBER}/${memberId}?_method=PUT`,
         method: "post",
@@ -149,7 +118,7 @@ const NewRegisterationForm = () => {
       });
       if (res.code == 201) {
         message.success(res.message || "Member Updated!");
-        navigate("/life-member");
+        navigate(-1);
       } else {
         message.error(res.message || "Failed to save member.");
       }
@@ -177,8 +146,6 @@ const NewRegisterationForm = () => {
     });
     if (cropState.target == "user") {
       setUserImageInfo({ file, preview: fileUrl });
-    } else if (cropState.target == "spouse") {
-      setSpouseImageInfo({ file, preview: fileUrl });
     }
 
     setCropState({
@@ -221,7 +188,7 @@ const NewRegisterationForm = () => {
                 Full Name <span className="text-red-500">*</span>
               </span>
             }
-            name="user_full_name"
+            name="name"
             rules={[{ required: true, message: "Please enter full name" }]}
           >
             <Input maxLength={20} autoFocus />
@@ -243,7 +210,7 @@ const NewRegisterationForm = () => {
                 Mobile Number<span className="text-red-500">*</span>
               </span>
             }
-            name="user_mobile"
+            name="mobile"
             rules={[
               { required: true, message: "Please enter mobile number" },
               {
@@ -261,22 +228,20 @@ const NewRegisterationForm = () => {
             />
           </Form.Item>
           <Form.Item
-            label="Whatsapp Mobile"
-            name="user_whatsapp"
-            rules={[
-              {
-                pattern: /^\d{10}$/,
-                message: "Mobile number must be exactly 10 digits",
-              },
-            ]}
+            label="Gender"
+            name="gender"
+            rules={[{ required: true, message: "Please select Gender" }]}
           >
-            <Input
-              maxLength={10}
-              inputMode="numeric"
-              onKeyPress={(e) => {
-                if (!/[0-9]/.test(e.key)) e.preventDefault();
-              }}
-            />
+            <Select placeholder="Select gender" allowClear>
+              {["Male", "Female"].map((gender) => (
+                <Select.Option key={gender} value={gender}>
+                  {gender}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Form.Item label="Gnati" name="gnati">
+            <Input maxLength={50} />
           </Form.Item>
           <Form.Item
             label={
@@ -284,7 +249,7 @@ const NewRegisterationForm = () => {
                 Email <span className="text-red-500">*</span>
               </span>
             }
-            name="user_email"
+            name="email"
             rules={[
               {
                 required: true,
@@ -298,36 +263,13 @@ const NewRegisterationForm = () => {
           >
             <Input maxLength={50} />
           </Form.Item>
-          <Form.Item label="Spouse Name" name="user_spouse_name">
-            <Input maxLength={50} />
-          </Form.Item>
+
           <Form.Item
-            label="Spouse Mobile"
-            name="user_spouse_mobile"
-            rules={[
-              {
-                pattern: /^\d{10}$/,
-                message: "Mobile number must be exactly 10 digits",
-              },
-            ]}
+            label="Category Type"
+            name="category"
+            rules={[{ required: true, message: "Please select Category" }]}
           >
-            <Input
-              maxLength={10}
-              inputMode="numeric"
-              onKeyPress={(e) => {
-                if (!/[0-9]/.test(e.key)) e.preventDefault();
-              }}
-            />
-          </Form.Item>
-          <Form.Item label="Spouse DOB" name="user_spouse_dob">
-            <DatePicker style={{ width: "100%" }} format="DD-MM-YYYY" />
-          </Form.Item>
-          <Form.Item
-            label="Member Type"
-            name="user_member_type"
-            rules={[{ required: true, message: "Please select user type" }]}
-          >
-            <Select placeholder="Select membership type" allowClear>
+            <Select placeholder="Select category type" allowClear>
               {membershipTypes.map((type) => (
                 <Option key={type.value} value={type.value}>
                   {type.label}
@@ -335,17 +277,7 @@ const NewRegisterationForm = () => {
               ))}
             </Select>
           </Form.Item>
-          <Form.Item
-            label={
-              <span>
-                User Category <span className="text-red-500">*</span>
-              </span>
-            }
-            rules={[{ required: true, message: "Category is required" }]}
-            name="user_cat"
-          >
-            <Input />
-          </Form.Item>
+
           <Form.Item name="user_image" label="Image">
             <div className="flex items-center gap-4">
               <AvatarCell imageSrc={userImageInfo.preview} />{" "}
@@ -370,24 +302,8 @@ const NewRegisterationForm = () => {
               </div>
             </div>
           </Form.Item>
-          <Form.Item name="spouse_image" label={<span>Spouse Image</span>}>
-            <div className="flex items-center gap-4">
-              <AvatarCell imageSrc={spouseImageInfo.preview} />{" "}
-              <Upload
-                showUploadList={false}
-                accept="image/*"
-                beforeUpload={(file) => {
-                  openCropper(file, "spouse");
-                  return false;
-                }}
-              >
-                <Button icon={<UploadOutlined />} className="w-full">
-                  Upload Image
-                </Button>
-              </Upload>
-            </div>
-          </Form.Item>
-          <Form.Item label="Address" name="user_add" className="col-span-4">
+
+          <Form.Item label="Address" name="address" className="col-span-4">
             <Input.TextArea rows={4} />
           </Form.Item>
         </div>
@@ -405,7 +321,7 @@ const NewRegisterationForm = () => {
             setCropState((prev) => ({ ...prev, modalVisible: false }))
           }
           onCropComplete={handleCroppedImage}
-          maxCropSize={{ width: 400, height: 400 }}
+          maxCropSize={{ width: 600, height: 600 }}
           title="Crop Member Image"
           cropstucture={true}
         />
@@ -414,4 +330,4 @@ const NewRegisterationForm = () => {
   );
 };
 
-export default NewRegisterationForm;
+export default MemberForm;

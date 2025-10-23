@@ -4,6 +4,10 @@ export const PANEL_CHECK = `/panel-check-status`;
 export const DOT_ENV = `/panel-fetch-dotenv`;
 //DASHBOARD
 export const DASHBOARD = `/dashboard`;
+//PROFILE
+export const PROFILE = `/panel-fetch-profile`;
+//UPDATE_PROFILE
+export const UPDATE_PROFILE = `/panel-update-profile`;
 //PANEL_LOGIN
 export const PANEL_LOGIN = `/panel-login`;
 //PANEL_LOGOUT
@@ -48,10 +52,7 @@ export const EVENT_NOTREGISTER_NOTSCANNED_REPORT = `/panel-fetch-event-notregist
 // export const COMPANY_DATA = `/web-fetch-company`;
 // //PROFILE
 // export const DASHBOARD = `/dashboard`;
-// //PROFILE
-// export const PROFILE = `/panel-fetch-profile`;
-// //UPDATE_PROFILE
-// export const UPDATE_PROFILE = `/panel-update-profile`;
+
 // //USER_LIST
 // export const USER_LIST = `/panel-fetch-user-list`;
 // //CREATE_USER_LIST

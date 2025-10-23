@@ -18,57 +18,40 @@ export default function Layout({ children }) {
   }, []);
 
   return (
-    // <ConfigProvider
-    //   theme={{
-    //     token: {
-    //       colorPrimary: "#fb6332",
-    //     },
-    //     components: {
-    //       Menu: {
-    //         itemSelectedBg: "#fb6332",
-    //         itemSelectedColor: "#ffffff",
-    //         itemHoverBg: "#fb7c55",
-    //         itemHoverColor: "#ffffff",
-    //       },
-    //     },
-    //   }}
-    // >
-      <div className="flex h-screen overflow-hidden">
-        {!isMobile && <Sidebar collapsed={collapsed} isMobile={isMobile} />}
+    <div className="flex h-screen overflow-hidden">
+      {!isMobile && <Sidebar collapsed={collapsed} isMobile={isMobile} />}
 
-        {isMobile && (
-          <Drawer
-            placement="left"
-            closable={false}
+      {isMobile && (
+        <Drawer
+          placement="left"
+          closable={false}
+          onClose={() => setDrawerOpen(false)}
+          open={drawerOpen}
+          styles={{ body: { padding: 0 } }}
+          width={256}
+        >
+          <Sidebar
+            collapsed={false}
             onClose={() => setDrawerOpen(false)}
-            open={drawerOpen}
-            styles={{ body: { padding: 0 } }}
-            width={256}
-          >
-            <Sidebar
-              collapsed={false}
-              onClose={() => setDrawerOpen(false)}
-              isMobile={true}
-            />
-          </Drawer>
-        )}
-
-        <div className="flex-1 flex flex-col overflow-hidden">
-          <Navbar
-            collapsed={collapsed}
-            onToggle={() => {
-              if (isMobile) {
-                setDrawerOpen(true);
-              } else {
-                setCollapsed(!collapsed);
-              }
-            }}
+            isMobile={true}
           />
-          <main className="flex-1 overflow-auto p-4 bg-gray-100">
-            {children}
-          </main>
-        </div>
+        </Drawer>
+      )}
+
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <Navbar
+          collapsed={collapsed}
+          onToggle={() => {
+            if (isMobile) {
+              setDrawerOpen(true);
+            } else {
+              setCollapsed(!collapsed);
+            }
+          }}
+        />
+        <main className="flex-1 overflow-auto p-4 bg-gray-100">{children}</main>
       </div>
+    </div>
     // </ConfigProvider>
   );
 }

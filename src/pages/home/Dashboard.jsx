@@ -11,12 +11,14 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { DASHBOARD } from "../../api";
 import { useApiMutation } from "../../hooks/useApiMutation";
+import { useSelector } from "react-redux";
 const { Title } = Typography;
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [data, setData] = useState(null);
   const { trigger, loading: isMutating } = useApiMutation();
+  const userType = useSelector((state) => state.auth?.user?.user_type);
 
   const fetchDashboard = async () => {
     const res = await trigger({
@@ -32,15 +34,8 @@ const Dashboard = () => {
   }, []);
 
   const cardItems = [
-    // {
-    //   title: "New Registration",
-    //   count: data?.totalNewRegistration || 0,
-    //   icon: <UserAddOutlined />,
-    //   color: "#1677ff",
-    //   path: "/new-registration-list",
-    // },
     {
-      title: "Member",
+      title: "Total Member",
       count: data?.totalMember || 0,
       icon: <TeamOutlined />,
       color: "#52c41a",
@@ -58,14 +53,14 @@ const Dashboard = () => {
       count: data?.totalPatron || 0,
       icon: <CrownOutlined />,
       color: "#eb2f96",
-      path: "/truste-member",
+      path: "/patron",
     },
     {
       title: "DyPatron",
       count: data?.totalcouplemembership || 0,
       icon: <HeartOutlined />,
       color: "#13c2c2",
-      path: "/couple-member",
+      path: "/dy-patron",
     },
     {
       title: "Active Event",
@@ -75,7 +70,11 @@ const Dashboard = () => {
       path: "/event",
     },
   ];
-
+  const handleNavigatePage = (path) => {
+    if (path && userType != 1) {
+      navigate(path);
+    }
+  };
   return (
     <>
       {isMutating || !data ? (
@@ -93,7 +92,7 @@ const Dashboard = () => {
                 styles={{
                   body: { padding: "16px" },
                 }}
-                onClick={() => navigate(item.path)}
+                onClick={() => handleNavigatePage(item.path)}
               >
                 <div className="flex flex-col items-center justify-center space-y-2 text-center">
                   <div

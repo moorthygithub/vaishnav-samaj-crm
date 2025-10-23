@@ -27,7 +27,7 @@ body {
    */
   border-top-right-radius: 100px;
   border-bottom-right-radius: 100px;
-  margin: 4px;
+  margin: 4px 4px 4px 0px;
   transition: all 0.2s;
 }
 
@@ -78,7 +78,7 @@ body {
   transition: transform 0.2s ease;
 }
 .ant-table-wrapper .ant-table-thead > tr > th {
-  background-color: #fb6332;
+  background-color: #7a2d61;
   color: #ffffff !important;
 }
 /* Force submenu hover text to be white */
@@ -89,10 +89,10 @@ body {
 /* Optional: also for open submenu items */
 .ant-menu-light .ant-menu-submenu-selected > .ant-menu-submenu-title {
   color: #ffffff !important;
-  background-color: #fb6332 !important;
+  background-color: #7a2d61 !important;
 }
 .heading {
-  color: #fb6332 !important;
+  color: #7a2d61 !important;
 }
 /* Scrollbar */
 .scrollbar-custom {
@@ -115,5 +115,23 @@ body {
 .ant-menu-light > .ant-menu.ant-menu-root.ant-menu-inline,
 .ant-menu-light.ant-menu-root.ant-menu-vertical,
 .ant-menu-light > .ant-menu.ant-menu-root.ant-menu-vertical {
+  border-inline-end: none !important;
+}
+:where(.ant-table-wrapper)
+  .ant-table.ant-table-bordered
+  > .ant-table-container
+  > .ant-table-content
+  > table
+  > thead
+  > tr
+  > th,
+:where(.ant-table-wrapper)
+  .ant-table.ant-table-bordered
+  > .ant-table-container
+  > .ant-table-content
+  > table
+  > tbody
+  > tr
+  > td {
   border-inline-end: none !important;
 }

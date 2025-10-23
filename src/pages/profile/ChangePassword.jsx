@@ -20,12 +20,8 @@ const ChangePassword = ({ open, setOpenDialog }) => {
 
       const response = await SubmitTrigger({
         url: PANEL_CHANGE_PASSWORD,
-        method: "post", 
+        method: "post",
         data: payload,
-        // headers: {
-        //   Authorization: `Bearer ${token}`,
-        //   "Content-Type": "application/json",
-        // },
       });
 
       if (response.code === 201) {
@@ -58,7 +54,7 @@ const ChangePassword = ({ open, setOpenDialog }) => {
       onCancel={() => setOpenDialog(false)}
       width={800}
     >
-      <h2 className="text-2xl font-bold text-[#fb6332]">Change Password</h2>
+      <h2 className="text-2xl font-bold heading">Change Password</h2>
 
       <Card>
         <Form

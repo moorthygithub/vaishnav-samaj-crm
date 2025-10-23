@@ -5,13 +5,19 @@ const AppThemeProvider = ({ children }) => {
     <ConfigProvider
       theme={{
         token: {
-          colorPrimary: "#fb6332",
+          colorPrimary: "#7a2d61", // main theme color
         },
         components: {
+          Button: {
+            colorPrimary: "#7a2d61",
+            colorPrimaryHover: "#993873",
+            colorPrimaryActive: "#993873",
+            colorTextLightSolid: "#ffffff",
+          },
           Menu: {
-            itemSelectedBg: "#fb6332",
+            itemSelectedBg: "#7a2d61",
             itemSelectedColor: "#ffffff",
-            itemHoverBg: "#fb7c55",
+            itemHoverBg: "#993873",
             itemHoverColor: "#ffffff",
           },
         },

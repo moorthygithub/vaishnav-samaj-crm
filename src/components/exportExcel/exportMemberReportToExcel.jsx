@@ -10,10 +10,10 @@ export const exportMemberReportToExcel = async (data, title = "Report") => {
   const columns = [
     { header: "MID", key: "", width: 15 },
     { header: "Name", key: "name", width: 25 },
+    { header: "Gender", key: "gender", width: 25 },
     { header: "DOB", key: "user_dob", width: 25 },
     { header: "Email", key: "email", width: 25 },
     { header: "Mobile", key: "mobile", width: 25 },
-    { header: "Whatsapp", key: "user_whatsapp", width: 25 },
   ];
   worksheet.columns = columns;
 
@@ -51,15 +51,15 @@ export const exportMemberReportToExcel = async (data, title = "Report") => {
   // ----- DATA ROWS -----
   data.forEach((item, i) => {
     const row = worksheet.getRow(i + 3);
-    const isInactive = item.is_active == "inactive";
+    const isInactive = item.user_status == "Inactive";
     row.getCell(1).value = item.user_mid ?? "";
     row.getCell(2).value = item.name ?? "";
-    row.getCell(3).value = item.user_dob
+    row.getCell(3).value = item.gender ?? "";
+    row.getCell(4).value = item.user_dob
       ? dayjs(item.user_dob).format("DD-MMM-YYYY")
       : "";
-    row.getCell(4).value = item.email;
-    row.getCell(5).value = item.mobile;
-    row.getCell(6).value = item.user_whatsapp;
+    row.getCell(5).value = item.email;
+    row.getCell(6).value = item.mobile;
 
     for (let j = 1; j <= columnCount; j++) {
       const cell = row.getCell(j);

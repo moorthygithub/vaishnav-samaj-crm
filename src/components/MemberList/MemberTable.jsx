@@ -60,33 +60,39 @@ const MemberTable = ({ users, onEdit, imageUrls, handleToggleStatus }) => {
       key: "user_mid",
       render: (_, user) => highlightMatch(user.user_mid, user._match),
     },
+
     {
       title: "Name",
       dataIndex: "name",
       key: "name",
       render: (_, user) => highlightMatch(user.name, user._match),
     },
-
+    {
+      title: "Gender",
+      dataIndex: "gender",
+      key: "gender",
+      render: (_, user) => highlightMatch(user.gender, user._match),
+    },
+    {
+      title: "Mobile",
+      dataIndex: "mobile",
+      key: "mobile",
+      render: (_, user) => highlightMatch(user.mobile, user._match),
+    },
     {
       title: "DOB",
       dataIndex: "user_dob",
       key: "user_dob",
       render: (_, user) =>
-        highlightMatch(dayjs(user.user_dob).format("DD-MM-YYYY"), user._match),
-    },
-    {
-      title: "Spouse Name",
-      dataIndex: "user_spouse_name",
-      key: "user_spouse_name",
-      render: (_, user) => highlightMatch(user.user_spouse_name, user._match),
+        highlightMatch(dayjs(user.user_dob).format("DD MMM YYYY"), user._match),
     },
 
     {
       title: "Status",
-      dataIndex: "is_active",
-      key: "is_active",
+      dataIndex: "user_status",
+      key: "user_status",
       render: (_, user) => {
-        const isActive = user.is_active === "active";
+        const isActive = user.user_status == "Active";
 
         return (
           <div className="flex justify-center">
@@ -129,7 +135,15 @@ const MemberTable = ({ users, onEdit, imageUrls, handleToggleStatus }) => {
     },
   ];
 
-  return <STTable data={users} columns={columns} />;
+  return (
+    <STTable
+      data={users}
+      columns={columns}
+      rowClassName={(record) =>
+        record.entry_status === "M" ? "bg-green-100" : ""
+      }
+    />
+  );
 };
 
 export default MemberTable;

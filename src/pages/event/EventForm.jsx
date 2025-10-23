@@ -18,17 +18,18 @@ import { EVENT } from "../../api";
 import AvatarCell from "../../components/common/AvatarCell";
 import CropImageModal from "../../components/common/CropImageModal";
 import { useApiMutation } from "../../hooks/useApiMutation";
-const membershipTypes = [
-  { label: "All", value: "All" },
-  { label: "Life Membership", value: "Life Membership" },
-  { label: "Trustee", value: "Trustee" },
-  { label: "Couple Membership", value: "Couple Membership" },
-  { label: "Members", value: "Members" },
-];
+// const membershipTypes = [
+//   { label: "All", value: "All" },
+//   { label: "Life Membership", value: "Life Membership" },
+//   { label: "Trustee", value: "Trustee" },
+//   { label: "Couple Membership", value: "Couple Membership" },
+//   { label: "Members", value: "Members" },
+// ];
 const noofMember = [
   { label: "One Card One Member", value: "One Card One Member" },
   { label: "One Card Multi Member", value: "One Card Multi Member" },
 ];
+import membershipTypes from "../../components/json/membershipTypes.json";
 
 const EventForm = ({ open, setOpenDialog, eventId, fetchEvents }) => {
   const { message } = App.useApp();
@@ -251,7 +252,7 @@ const EventForm = ({ open, setOpenDialog, eventId, fetchEvents }) => {
                 name="event_name"
                 rules={[{ required: true, message: "Event Name is required" }]}
               >
-                <Input maxLength={50} autoFocus/>
+                <Input maxLength={50} autoFocus />
               </Form.Item>
 
               <Form.Item
