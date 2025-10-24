@@ -18,7 +18,6 @@ const MemberList = ({ title, userTypeFilter }) => {
     userImageBase: "",
     noImage: "",
   });
-  console.log(users, "usersusers");
 
   const fetchUser = async () => {
     const res = await trigger({

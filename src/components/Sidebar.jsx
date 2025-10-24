@@ -62,6 +62,9 @@ const getMenuItems = (collapsed, userTypeRaw) => {
   const dashboardItems = [
     { key: "/home", icon: <HomeOutlined />, label: "Dashboard" },
   ];
+  const olddUserItems = [
+    { key: "/old-users", icon: <HomeOutlined />, label: "Old Users" },
+  ];
 
   const managementChildren = [
     { key: "/life-member", icon: <LockOutlined />, label: "Life Membership" },
@@ -108,6 +111,7 @@ const getMenuItems = (collapsed, userTypeRaw) => {
         label: "Management",
         children: managementChildren,
       },
+      ...olddUserItems,
       {
         key: "sub1",
         icon: <MailOutlined />,
@@ -125,6 +129,7 @@ const getMenuItems = (collapsed, userTypeRaw) => {
 
   return [
     { type: "group", label: "Dashboard", children: dashboardItems },
+    { type: "group", label: "Users", children: olddUserItems },
     {
       type: "group",
       label: "Member",
@@ -172,7 +177,6 @@ export default function Sidebar({ collapsed, isMobile = false, onClose }) {
     return [];
   };
   const userType = useSelector((state) => state.auth?.user?.user_type);
-  console.log(userType, "userType");
   const [openKeys, setOpenKeys] = useState(() =>
     getOpenKeysFromPath(location.pathname)
   );
@@ -239,29 +243,8 @@ export default function Sidebar({ collapsed, isMobile = false, onClose }) {
       className={`h-full bg-white shadow-xl  overflow-hidden flex flex-col font-[Inter] transition-all duration-300
         ${isMobile ? "fixed z-50 h-screen" : "relative"}`}
     >
-      {/* <div className="flex items-center justify-center h-14 px-4 bg-[#ffe1f4]">
-        <motion.img
-          src={collapsed ? logo1 : finalUserImage}
-          alt="Logo"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.1 }}
-          className={`object-contain transition-all duration-300 ${
-            collapsed ? "w-12" : "w-12"
-          }`}
-        />
-
-        {isMobile && (
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            onClick={onClose}
-            className="text-white hover:text-red-300 transition-colors"
-          >
-            <CloseOutlined className="text-xl" />
-          </motion.button>
-        )}
-      </div> */}
-      <div className="flex items-center justify-center h-14 px-4 bg-[#ffe1f4]">
+     
+      <div className="flex items-center justify-center h-14 px-4 !bg-[#ffe1f4] border-b border-b-[#993873]">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -276,7 +259,6 @@ export default function Sidebar({ collapsed, isMobile = false, onClose }) {
             }`}
           />
 
-          {/* Show text only when sidebar is expanded */}
           {!collapsed && (
             <motion.span
               initial={{ opacity: 0, x: -10 }}

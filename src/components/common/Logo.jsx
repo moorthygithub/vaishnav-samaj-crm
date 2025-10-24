@@ -5,7 +5,6 @@ const useFinalUserImage = () => {
   const userImagePath = useSelector(
     (state) => state?.company?.companyDetails?.company_image
   );
-  console.log(userImagePath);
   
   const userBaseUrl = imageUrls?.find(
     (img) => img.image_for == "Company"

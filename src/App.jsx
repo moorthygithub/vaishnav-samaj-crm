@@ -23,6 +23,7 @@ import LifeMemberReport from "./pages/report/MemberReport/LifeMemberReport";
 import PatronReport from "./pages/report/MemberReport/PatronReport";
 import NotRegisterNotScanned from "./pages/report/NotregisteredNotScanned/NotRegisterNotScanned";
 import RegisteredNotScanned from "./pages/report/registerednotscanned/RegisteredNotScanned";
+import OldUsers from "./pages/oldusers/OldUsers";
 
 function App() {
   return (
@@ -51,6 +52,7 @@ function App() {
                 <Route path="/life-member" element={<LifeMembersPage />} />
                 <Route path="/patron" element={<PatronPage />} />
                 <Route path="/dy-patron" element={<DyPatronPage />} />
+                <Route path="/old-users" element={<OldUsers />} />
                 <Route
                   path="/members/edit/:memberId"
                   element={<MemberForm />}

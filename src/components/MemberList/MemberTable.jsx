@@ -7,30 +7,9 @@ import { Button, Popconfirm, Space, Tag, Tooltip } from "antd";
 import dayjs from "dayjs";
 import AvatarCell from "../common/AvatarCell";
 import STTable from "../STTable/STTable";
+import HighlightText from "../common/HighlightText";
 
 const MemberTable = ({ users, onEdit, imageUrls, handleToggleStatus }) => {
-  const highlightMatch = (text, match) => {
-    if (!match || !text) return text;
-    const regex = new RegExp(`(${match})`, "gi");
-    return text.split(regex).map((part, index) =>
-      part.toLowerCase() === match.toLowerCase() ? (
-        <mark
-          key={index}
-          style={{
-            backgroundColor: "#3B82F6",
-            color: "#ffffff",
-            padding: "0 0.25rem",
-            borderRadius: "0.25rem",
-          }}
-        >
-          {part}
-        </mark>
-      ) : (
-        part
-      )
-    );
-  };
-
   const columns = [
     {
       title: "",
@@ -46,53 +25,62 @@ const MemberTable = ({ users, onEdit, imageUrls, handleToggleStatus }) => {
         return (
           <div className="flex justify-center gap-2">
             <AvatarCell imageSrc={memberImageSrc} />
-            {user.user_member_type == "Couple Membership" && (
+            {user.user_member_type === "Couple Membership" && (
               <AvatarCell imageSrc={spouseImageSrc} />
             )}
           </div>
         );
       },
     },
-
     {
       title: "MID",
       dataIndex: "user_mid",
       key: "user_mid",
-      render: (_, user) => highlightMatch(user.user_mid, user._match),
+      render: (_, user) => (
+        <HighlightText text={user.user_mid} match={user._match} />
+      ),
     },
-
     {
       title: "Name",
       dataIndex: "name",
       key: "name",
-      render: (_, user) => highlightMatch(user.name, user._match),
+      render: (_, user) => (
+        <HighlightText text={user.name} match={user._match} />
+      ),
     },
     {
       title: "Gender",
       dataIndex: "gender",
       key: "gender",
-      render: (_, user) => highlightMatch(user.gender, user._match),
+      render: (_, user) => (
+        <HighlightText text={user.gender} match={user._match} />
+      ),
     },
     {
       title: "Mobile",
       dataIndex: "mobile",
       key: "mobile",
-      render: (_, user) => highlightMatch(user.mobile, user._match),
+      render: (_, user) => (
+        <HighlightText text={user.mobile} match={user._match} />
+      ),
     },
     {
       title: "DOB",
       dataIndex: "user_dob",
       key: "user_dob",
-      render: (_, user) =>
-        highlightMatch(dayjs(user.user_dob).format("DD MMM YYYY"), user._match),
+      render: (_, user) => (
+        <HighlightText
+          text={dayjs(user.user_dob).format("DD MMM YYYY")}
+          match={user._match}
+        />
+      ),
     },
-
     {
       title: "Status",
       dataIndex: "user_status",
       key: "user_status",
       render: (_, user) => {
-        const isActive = user.user_status == "Active";
+        const isActive = user.user_status === "Active";
 
         return (
           <div className="flex justify-center">
@@ -117,21 +105,19 @@ const MemberTable = ({ users, onEdit, imageUrls, handleToggleStatus }) => {
     {
       title: "Actions",
       key: "actions",
-      render: (_, user) => {
-        return (
-          <Space>
-            <Tooltip title="Edit User">
-              <Button
-                type="primary"
-                icon={<EditOutlined />}
-                size="small"
-                onClick={() => onEdit(user)}
-              />
-            </Tooltip>
-          </Space>
-        );
-      },
       width: 130,
+      render: (_, user) => (
+        <Space>
+          <Tooltip title="Edit User">
+            <Button
+              type="primary"
+              icon={<EditOutlined />}
+              size="small"
+              onClick={() => onEdit(user)}
+            />
+          </Tooltip>
+        </Space>
+      ),
     },
   ];
 

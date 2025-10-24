@@ -6,6 +6,14 @@ export const DOT_ENV = `/panel-fetch-dotenv`;
 export const DASHBOARD = `/dashboard`;
 //PROFILE
 export const PROFILE = `/panel-fetch-profile`;
+//PROFILE
+export const OLD_USERS = `/panel-fetch-old-users-list`;
+//OLD_USERS_BY_UID
+export const OLD_USERS_BY_UID = `/panel-fetch-old-users`;
+//RELATION_OLD_USERS_BY_UID
+export const RELATION_OLD_USERS_BY_UID = `/panel-fetch-relation-old-users`;
+//RELATION_OLD_USERS_BY_UID
+export const DUPLICATE_OLD_USERS_BY_UID = `/panel-fetch-duplicate-old-users`;
 //UPDATE_PROFILE
 export const UPDATE_PROFILE = `/panel-update-profile`;
 //PANEL_LOGIN
