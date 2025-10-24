@@ -135,3 +135,6 @@ body {
   > td {
   border-inline-end: none !important;
 }
+.ant-table-tbody > tr:hover > td {
+  background-color: inherit !important;
+}

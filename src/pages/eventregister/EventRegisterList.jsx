@@ -74,9 +74,9 @@ const EvenRegisterList = () => {
     },
     {
       title: "Member Type",
-      dataIndex: "user_member_type",
-      key: "user_member_type",
-      render: (_, user) => highlightMatch(user.user_member_type, user._match),
+      dataIndex: "category",
+      key: "category",
+      render: (_, user) => highlightMatch(user.category, user._match),
     },
 
     {

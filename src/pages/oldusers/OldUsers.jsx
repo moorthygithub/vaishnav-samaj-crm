@@ -1,3 +1,4 @@
+
 import { Card, Input, Spin, Tag, Drawer, List } from "antd";
 import { useEffect, useState } from "react";
 import {
@@ -90,7 +91,7 @@ const OldUsers = () => {
       setDrawerLabels({});
     } finally {
       setDrawerTitle(title);
-      setClickedId(clickedIdLocal);
+      // setClickedId(clickedIdLocal);
     }
   };
 
@@ -194,6 +195,24 @@ const OldUsers = () => {
             onChange={(e) => setSearchTerm(e.target.value.toLowerCase())}
             className="max-w-sm"
           />
+     
+          <div className="flex items-center gap-4">
+       
+            <div className="flex items-center gap-2">
+           
+              <div className="w-4 h-4 rounded bg-orange-100 border border-orange-300" />
+             <span className="text-sm text-gray-700">Relation</span>
+          
+            </div>
+           
+            <div className="flex items-center gap-2">
+            
+              <div className="w-4 h-4 rounded bg-red-100 border border-red-300" />
+              <span className="text-sm text-gray-700">Duplicate</span>
+            
+            </div>
+         
+          </div>
         </div>
       </div>
 
@@ -271,7 +290,7 @@ const OldUsers = () => {
                         <span className="w-28 font-bold">UID:</span>
                         <span className="text-gray-900">{item.uid || "-"}</span>
                       </div>
-                  
+
                       <div className="flex items-center">
                         <span className="w-28 font-bold">Name:</span>
                         <span className="text-gray-900">

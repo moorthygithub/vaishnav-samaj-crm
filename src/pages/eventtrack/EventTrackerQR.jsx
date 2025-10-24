@@ -40,10 +40,8 @@ const EventMidScanner = ({
         method: "post",
         data: payload,
       });
-
-      if (res.code === 201) {
+      if (res.code == 201) {
         message.success(res.message || "Event saved!");
-        // setOpenQrDialog(false);
       } else {
         message.error(res.message || "Failed to save event.");
       }
@@ -123,7 +121,6 @@ const EventMidScanner = ({
         </>
       )}
 
-      {/* Multi Member Input Modal */}
       <Modal
         open={multiMemberModal}
         title="Enter Number of People"

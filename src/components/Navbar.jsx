@@ -26,7 +26,6 @@ export default function Navbar({ collapsed, onToggle }) {
   const finalUserImage = userImagePath
     ? `${userBaseUrl}${userImagePath}`
     : noImageUrl;
-  console.log(finalUserImage, "finalUserImage");
   const logout = useLogout();
   const naviagte = useNavigate();
   const handleMenuClick = async ({ key }) => {
