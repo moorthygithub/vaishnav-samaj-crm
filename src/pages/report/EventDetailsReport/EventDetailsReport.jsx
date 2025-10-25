@@ -7,11 +7,10 @@ import {
   App,
   Button,
   Card,
-  Descriptions,
   Form,
   Select,
   Spin,
-  Tooltip,
+  Tooltip
 } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useRef, useState } from "react";
@@ -219,7 +218,7 @@ const EventDetailsReport = () => {
                       <td className="px-3 py-2 text-center">{item.name}</td>
                       <td className="px-3 py-2 text-center ">{item.mobile}</td>
                       <td className="px-3 py-2 text-center ">
-                        {item.user_member_type}
+                        {item.category}
                       </td>
                     </tr>
                   ))}

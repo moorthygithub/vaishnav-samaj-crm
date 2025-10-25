@@ -108,7 +108,7 @@ export const exportEventDetailsReportToExcel = async (
       people: item.event_no_of_people,
       name: item.name,
       mobile: item.mobile,
-      type: item.user_member_type,
+      type: item.category,
     });
   });
 
