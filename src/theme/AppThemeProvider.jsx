@@ -5,7 +5,7 @@ const AppThemeProvider = ({ children }) => {
     <ConfigProvider
       theme={{
         token: {
-          colorPrimary: "#7a2d61", // main theme color
+          colorPrimary: "#7a2d61", 
         },
         components: {
           Button: {

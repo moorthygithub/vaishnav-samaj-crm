@@ -108,7 +108,7 @@ const MemberTable = ({ users, onEdit, imageUrls, handleToggleStatus }) => {
       width: 130,
       render: (_, user) => (
         <Space>
-          <Tooltip title="Edit User">
+          <Tooltip title="Edit">
             <Button
               type="primary"
               icon={<EditOutlined />}

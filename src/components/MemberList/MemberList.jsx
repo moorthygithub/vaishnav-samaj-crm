@@ -97,6 +97,12 @@ const MemberList = ({ title, userTypeFilter }) => {
             className="max-w-sm"
           />
         </div>
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 rounded bg-green-100 border border-green-300" />
+            <span className="text-sm text-gray-700">Matched Data</span>
+          </div>
+        </div>
       </div>
 
       <div className="min-h-[27rem]">

@@ -67,7 +67,7 @@ const Dashboard = () => {
       count: data?.totalActiveEvent || 0,
       icon: <CalendarOutlined />,
       color: "#722ed1",
-      path: "/event",
+      path: "",
     },
   ];
   const handleNavigatePage = (path) => {

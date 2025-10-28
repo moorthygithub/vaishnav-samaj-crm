@@ -15,12 +15,36 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
+import logo1 from "../assets/logo-1.png";
 import { setShowUpdateDialog } from "../store/auth/versionSlice";
 import useFinalUserImage from "./common/Logo";
 
 const getMenuItems = (collapsed, userTypeRaw) => {
   const uType = Number(userTypeRaw);
   const isOnlyuser = uType === 1;
+  const eventChildren = [
+    { key: "/event", icon: <SolutionOutlined />, label: "Event" },
+    { key: "/event-register", icon: <TagsOutlined />, label: "Event Register" },
+    { key: "/event-track", icon: <CarOutlined />, label: "Event Track" },
+  ];
+  const eventReportChildren = [
+    { key: "/report-event", icon: <CarOutlined />, label: "Event" },
+    {
+      key: "/report-event-details",
+      icon: <CarOutlined />,
+      label: "Event Details",
+    },
+    {
+      key: "/report-register-notscanned",
+      icon: <CarOutlined />,
+      label: "Registered Not Scanned",
+    },
+    {
+      key: "/report-notregister-notscanned",
+      icon: <CarOutlined />,
+      label: "Not Registered Not Scanned",
+    },
+  ];
 
   if (isOnlyuser) {
     const dashboardItems = [
@@ -52,15 +76,53 @@ const getMenuItems = (collapsed, userTypeRaw) => {
     { key: "/dy-patron", icon: <CarOutlined />, label: "Dy Patron" },
   ];
 
+  const fullReportChildren = [
+    {
+      key: "sales-submenu",
+      icon: <ProfileOutlined />,
+      label: <span id="report-scroll-anchor">Member</span>,
+      children: [
+        {
+          key: "/report-life-member",
+          icon: <ProfileOutlined />,
+          label: "Life Membership",
+        },
+        {
+          key: "/report-patron",
+          icon: <ProfileOutlined />,
+          label: "Patron",
+        },
+        {
+          key: "/report-dy-patron",
+          icon: <ProfileOutlined />,
+          label: "Dy Patron",
+        },
+      ],
+    },
+    ...eventReportChildren,
+  ];
+
   if (collapsed) {
     return [
       ...dashboardItems,
-      ...olddUserItems,
       {
         key: "sub",
         icon: <MailOutlined />,
         label: "Management",
         children: managementChildren,
+      },
+      ...olddUserItems,
+      {
+        key: "sub1",
+        icon: <MailOutlined />,
+        label: "Event",
+        children: eventChildren,
+      },
+      {
+        key: "sub2",
+        icon: <BarChartOutlined />,
+        label: <span id="report-scroll-anchor">Report</span>,
+        children: fullReportChildren,
       },
     ];
   }
@@ -77,6 +139,30 @@ const getMenuItems = (collapsed, userTypeRaw) => {
           icon: <MailOutlined />,
           label: "Member",
           children: managementChildren,
+        },
+      ],
+    },
+    {
+      type: "group",
+      label: "Event",
+      children: [
+        {
+          key: "sub1",
+          icon: <MailOutlined />,
+          label: "Event",
+          children: eventChildren,
+        },
+      ],
+    },
+    {
+      type: "group",
+      label: "Report",
+      children: [
+        {
+          key: "sub2",
+          icon: <BarChartOutlined />,
+          label: "Report",
+          children: fullReportChildren,
         },
       ],
     },
@@ -119,18 +205,35 @@ export default function Sidebar({ collapsed, isMobile = false, onClose }) {
     );
   };
   const rootSubmenuKeys = ["sub", "sub1", "sub2"];
-
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (collapsed) {
-        setOpenKeys([]);
-      } else {
-        setOpenKeys(rootSubmenuKeys);
-      }
-    }, 200);
+    if (openKeys.includes("sub2")) {
+      const anchor = document.getElementById("report-scroll-anchor");
+      const scrollContainer = document.querySelector(".scrollbar-custom");
 
-    return () => clearTimeout(timeout);
-  }, [collapsed]);
+      if (anchor && scrollContainer) {
+        let offset = 0;
+        let el = anchor;
+
+        while (el && el !== scrollContainer) {
+          offset += el.offsetTop;
+          el = el.offsetParent;
+        }
+
+        scrollContainer.scrollTo({
+          top: offset - 10,
+          behavior: "smooth",
+        });
+        setTimeout(() => {
+          scrollContainer.scrollTo({
+            top: offset - 10,
+            behavior: "smooth",
+          });
+        }, 200);
+      } else {
+        console.warn("⚠️ Could not find anchor or scroll container.");
+      }
+    }
+  }, [openKeys]);
 
   return (
     <motion.aside
@@ -148,7 +251,7 @@ export default function Sidebar({ collapsed, isMobile = false, onClose }) {
           className="flex items-center justify-start gap-2 w-full"
         >
           <img
-            src={finalUserImage || ""}
+            src={logo1}
             alt="Logo"
             className={`object-contain transition-all duration-300 ${
               collapsed ? "w-10 mx-auto" : "w-10"
@@ -186,19 +289,22 @@ export default function Sidebar({ collapsed, isMobile = false, onClose }) {
           openKeys={openKeys}
           selectedKeys={selectedKeys}
           onOpenChange={(keys) => {
-            if (!collapsed) return;
-            setOpenKeys(keys);
+            const latestOpenKey = keys.find(
+              (key) => openKeys.indexOf(key) === -1
+            );
+            if (rootSubmenuKeys.includes(latestOpenKey)) {
+              setOpenKeys(latestOpenKey ? [latestOpenKey] : []);
+            } else {
+              setOpenKeys(keys);
+            }
           }}
           onClick={({ key, keyPath }) => {
             if (isMobile && onClose) {
               onClose();
             }
-
-            // Only close dropdowns when collapsed
-            if (collapsed && keyPath.length === 1) {
+            if (keyPath.length === 1) {
               setOpenKeys([]);
             }
-
             naviagte(key);
           }}
           className="custom-menu"
@@ -242,7 +348,7 @@ export default function Sidebar({ collapsed, isMobile = false, onClose }) {
                     </span>
                   </div>
                   <div className="text-[11px] font-normal text-gray-500 mt-1">
-                    Updated on: 28-10-2025
+                    Updated on: 25-10-2025
                   </div>
                 </div>
               }

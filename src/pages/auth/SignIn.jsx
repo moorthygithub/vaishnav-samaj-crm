@@ -135,7 +135,7 @@ const SignIn = () => {
           </div>
           <div className="hidden md:flex items-center justify-center">
             <img
-              src={logo}
+                src={finalUserImage || ""}
               alt="Logo"
               className="w-60 h-60 object-contain rounded-md"
             />
