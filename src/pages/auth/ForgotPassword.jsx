@@ -120,7 +120,7 @@ const ForgotPassword = () => {
 
           <div className="hidden md:flex items-center justify-center">
             <img
-              src={logo}
+              src={finalUserImage || ""}
               alt="Login Illustration"
               className="w-60 h-60 object-contain rounded-md"
             />

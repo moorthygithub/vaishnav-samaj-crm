@@ -1,4 +1,3 @@
-
 import { Card, Input, Spin, Tag, Drawer, List } from "antd";
 import { useEffect, useState } from "react";
 import {
@@ -69,13 +68,13 @@ const OldUsers = () => {
           if (title == "Duplicate Users") {
             labels[item.uid] =
               item.uid == clickedIdLocal
-                ? { labelText: "Parent", labelColor: "#b7f0a7" }
-                : { labelText: "Child", labelColor: "#f7a7a7" };
+                ? { labelText: "Original", labelColor: "#b7f0a7" }
+                : { labelText: "Duplicate", labelColor: "#f7a7a7" };
           } else if (title == "Relation Users") {
             labels[item.uid] =
               item.uid == clickedIdLocal
-                ? { labelText: "Parent", labelColor: "#b7f0a7" }
-                : { labelText: "Child", labelColor: "#f7a7a7" };
+                ? { labelText: "Original", labelColor: "#b7f0a7" }
+                : { labelText: "Relation", labelColor: "#f7a7a7" };
           } else {
             labels[item.uid] = { labelText: "", labelColor: "#fff7f7" };
           }
@@ -195,23 +194,21 @@ const OldUsers = () => {
             onChange={(e) => setSearchTerm(e.target.value.toLowerCase())}
             className="max-w-sm"
           />
-     
+
           <div className="flex items-center gap-4">
-       
             <div className="flex items-center gap-2">
-           
-              <div className="w-4 h-4 rounded bg-orange-100 border border-orange-300" />
-             <span className="text-sm text-gray-700">Relation</span>
-          
+              <div className="w-4 h-4 rounded bg-white-100 border border-white-100 shadow-2xl" />
+              <span className="text-sm text-gray-700">Single</span>
             </div>
-           
             <div className="flex items-center gap-2">
-            
+              <div className="w-4 h-4 rounded bg-orange-100 border border-orange-300" />
+              <span className="text-sm text-gray-700">Relation</span>
+            </div>
+
+            <div className="flex items-center gap-2">
               <div className="w-4 h-4 rounded bg-red-100 border border-red-300" />
               <span className="text-sm text-gray-700">Duplicate</span>
-            
             </div>
-         
           </div>
         </div>
       </div>
@@ -244,7 +241,6 @@ const OldUsers = () => {
           <div className="text-center text-gray-500 py-20">No data found.</div>
         )}
       </div>
-
       <Drawer
         title={drawerTitle}
         placement="right"

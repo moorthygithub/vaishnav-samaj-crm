@@ -138,3 +138,8 @@ body {
 .ant-table-tbody > tr:hover > td {
   background-color: inherit !important;
 }
+.ant-menu-submenu .ant-menu-light .ant-menu-item-selected,
+.ant-menu-submenu .ant-menu-item-selected {
+  background-color: #833469d1 !important;
+  color: #fff !important;
+}
