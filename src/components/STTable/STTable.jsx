@@ -1,6 +1,6 @@
 
 import { Table, Pagination } from "antd";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const SGSTable = ({
   data = [],
@@ -12,6 +12,11 @@ const SGSTable = ({
 }) => {
   const [current, setCurrent] = useState(1);
   const [pageSize, setPageSize] = useState(pagination.pageSize || 10);
+
+  // Reset to page 1 whenever the data changes (e.g. after search/filter)
+  useEffect(() => {
+    setCurrent(1);
+  }, [data]);
 
   const handlePageChange = (page, size) => {
     setCurrent(page);
