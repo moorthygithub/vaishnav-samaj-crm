@@ -1,12 +1,11 @@
-import { Input, message, Button, Tooltip, Descriptions, Card } from "antd";
-import { useState, useRef, useEffect } from "react";
+import { EditOutlined, SearchOutlined } from "@ant-design/icons";
+import { Button, Card, Descriptions, Input, message, Tooltip, Typography } from "antd";
 import dayjs from "dayjs";
-import AvatarCell from "../common/AvatarCell";
+import { useEffect, useRef, useState } from "react";
+import { OLD_USERS, PANEL_UPDATE_USERS_MID } from "../../api";
+import { useApiMutation } from "../../hooks/useApiMutation";
 import HighlightText from "../common/HighlightText";
 import STTable from "../STTable/STTable";
-import { EditOutlined, SearchOutlined } from "@ant-design/icons";
-import { useApiMutation } from "../../hooks/useApiMutation";
-import { PANEL_UPDATE_USERS_MID, OLD_USERS } from "../../api";
 
 const MIDTable = ({ users, imageUrls, fetchUser }) => {
   const { trigger } = useApiMutation();
@@ -45,7 +44,7 @@ const MIDTable = ({ users, imageUrls, fetchUser }) => {
 
       if (res?.code === 201) {
         message.success(res.message || "MID updated successfully");
-        fetchUser();
+        user.user_mid = midValue; // Mutate locally to avoid page reload
       } else {
         message.error(res.message || "Failed to update MID");
       }
@@ -131,7 +130,8 @@ const MIDTable = ({ users, imageUrls, fetchUser }) => {
         return (a.user_status || "").localeCompare(b.user_status || "");
       },
       render: (_, user) => (
-        <HighlightText text={user.user_status} match={user._match} />
+        <HighlightText text={user.entry_status ? user.entry_status : user.entry_status
+        } />
       ),
     },
     {
@@ -213,7 +213,7 @@ const MIDTable = ({ users, imageUrls, fetchUser }) => {
 
   return (
     <div className="flex flex-col xl:flex-row gap-6 w-full items-start">
-      <div className={`transition-all duration-300 ${drawerVisible ? "w-full xl:w-2/3" : "w-full"}`}>
+      <div className={`transition-all duration-300 ${drawerVisible ? "w-full xl:w-3/4" : "w-full"}`}>
         <STTable
           virtual
           data={users}
@@ -221,14 +221,18 @@ const MIDTable = ({ users, imageUrls, fetchUser }) => {
           pagination={false}
           scroll={{ y: "calc(100vh - 280px)", x: "max-content" }}
           rowClassName={(record) =>
-            record.entry_status === "M" ? "bg-green-100" : ""
+            record.id === activeUserId
+              ? "bg-orange-100"
+              : record.entry_status === "M"
+                ? "bg-green-100"
+                : ""
           }
         />
       </div>
 
       {drawerVisible && (
         <Card
-          className="w-full xl:w-1/3 shadow-md sticky top-4 max-h-[calc(100vh-2rem)] overflow-y-auto"
+          className="w-full xl:w-1/4 shadow-md sticky top-4 max-h-[calc(100vh-2rem)] overflow-y-auto"
           title="Matched Old User Details"
           extra={
             <Button type="text" onClick={() => setDrawerVisible(false)}>
@@ -237,13 +241,25 @@ const MIDTable = ({ users, imageUrls, fetchUser }) => {
           }
         >
           {oldUserData ? (
-            <Descriptions column={1} bordered size="small">
-              <Descriptions.Item label="Full Name">{oldUserData.full_name}</Descriptions.Item>
-              <Descriptions.Item label="Mobile">{oldUserData.mobile}</Descriptions.Item>
-              <Descriptions.Item label="Address">{oldUserData.address}</Descriptions.Item>
-              <Descriptions.Item label="UID">{oldUserData.uid}</Descriptions.Item>
-              <Descriptions.Item label="Flag">{oldUserData.flag}</Descriptions.Item>
-              <Descriptions.Item label="Duplicate Flag">{oldUserData.duplicate_flag}</Descriptions.Item>
+            <Descriptions
+              column={1}
+              bordered
+              size="small"
+              colon={false}
+              labelStyle={{ display: "none" }}
+            >
+              <Descriptions.Item>{oldUserData.full_name}</Descriptions.Item>
+              <Descriptions.Item>{oldUserData.mobile}</Descriptions.Item>
+
+              <Descriptions.Item>
+                <div className="flex gap-2 items-center">
+                  <span>{oldUserData.uid}</span>
+                  <Typography.Text copyable={{ text: oldUserData.uid }} />
+                </div>
+              </Descriptions.Item>
+
+              <Descriptions.Item>{oldUserData.flag}</Descriptions.Item>
+              <Descriptions.Item>{oldUserData.duplicate_flag}</Descriptions.Item>
             </Descriptions>
           ) : (
             <p>No user data available.</p>
