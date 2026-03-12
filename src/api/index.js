@@ -44,6 +44,8 @@ export const UPDATE_USER_STATUS = `/panel-update-users-status`;
 export const PAYMENT_MODE = `/panel-fetch-payment-mode`;
 //EVENT_TRACK
 export const EVENT_TRACK = `/event-member-track`;
+//PANEL_UPDATE_USERS_MID
+export const PANEL_UPDATE_USERS_MID = `/panel-update-users-mid`;
 //MEMBER_REPORT
 export const MEMBER_REPORT = `/panel-fetch-member-report`;
 //EVENT_REPORT

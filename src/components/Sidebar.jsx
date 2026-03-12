@@ -1,14 +1,12 @@
 import {
   ArrowRightOutlined,
-  BarChartOutlined,
   CarOutlined,
   CloseOutlined,
   HomeOutlined,
+  IdcardOutlined,
   LockOutlined,
   MailOutlined,
-  ProfileOutlined,
   SolutionOutlined,
-  TagsOutlined,
 } from "@ant-design/icons";
 import { Alert, Menu } from "antd";
 import { motion } from "framer-motion";
@@ -51,6 +49,10 @@ const getMenuItems = (collapsed, userTypeRaw) => {
     },
     { key: "/dy-patron", icon: <CarOutlined />, label: "Dy Patron" },
   ];
+  const midIssued =
+    uType === 3
+      ? [{ key: "/mid-issued", icon: <IdcardOutlined />, label: "MID Issued" }]
+      : [];
 
   if (collapsed) {
     return [
@@ -62,12 +64,14 @@ const getMenuItems = (collapsed, userTypeRaw) => {
         label: "Management",
         children: managementChildren,
       },
+      ...midIssued,
     ];
   }
 
   return [
     { type: "group", label: "Dashboard", children: dashboardItems },
     { type: "group", label: "Users", children: olddUserItems },
+
     {
       type: "group",
       label: "Member",
@@ -80,7 +84,10 @@ const getMenuItems = (collapsed, userTypeRaw) => {
         },
       ],
     },
-  ];
+    midIssued.length > 0
+      ? { type: "group", label: "MID", children: midIssued }
+      : null,
+  ].filter(Boolean);
 };
 
 export default function Sidebar({ collapsed, isMobile = false, onClose }) {
@@ -92,12 +99,13 @@ export default function Sidebar({ collapsed, isMobile = false, onClose }) {
   };
   const userType = useSelector((state) => state.auth?.user?.user_type);
   const [openKeys, setOpenKeys] = useState(() =>
-    getOpenKeysFromPath(location.pathname)
+    getOpenKeysFromPath(location.pathname),
   );
   const naviagte = useNavigate();
   const items = getMenuItems(collapsed, Number(userType));
   const dispatch = useDispatch();
   const finalUserImage = useFinalUserImage();
+  const userCompany = useSelector((state) => state?.company?.companyDetails);
   const [delayedCollapse, setDelayedCollapse] = useState(collapsed);
   const localVersion = useSelector((state) => state.auth?.version);
   const serverVersion = useSelector((state) => state?.version?.version);
@@ -115,7 +123,7 @@ export default function Sidebar({ collapsed, isMobile = false, onClose }) {
       setShowUpdateDialog({
         showUpdateDialog: true,
         version: serverVersion,
-      })
+      }),
     );
   };
   const rootSubmenuKeys = ["sub", "sub1", "sub2"];
@@ -160,9 +168,9 @@ export default function Sidebar({ collapsed, isMobile = false, onClose }) {
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.3 }}
-              className="text-[#993873] font-semibold text-[16px]"
+              className="text-[#993873] font-semibold text-[18px]"
             >
-              Vaishnavi Samaj
+              {userCompany.company_name || "Shri Bangalore Vaishnav Samaj"}
             </motion.span>
           )}
         </motion.div>
@@ -242,7 +250,7 @@ export default function Sidebar({ collapsed, isMobile = false, onClose }) {
                     </span>
                   </div>
                   <div className="text-[11px] font-normal text-gray-500 mt-1">
-                    Updated on: 28-10-2025
+                    Updated on: 12-03-2025
                   </div>
                 </div>
               }
