@@ -24,6 +24,8 @@ import PatronReport from "./pages/report/MemberReport/PatronReport";
 import NotRegisterNotScanned from "./pages/report/NotregisteredNotScanned/NotRegisterNotScanned";
 import RegisteredNotScanned from "./pages/report/registerednotscanned/RegisteredNotScanned";
 import OldUsers from "./pages/oldusers/OldUsers";
+import NotFoundPage from "./components/common/not-found";
+import MIDIssued from "./pages/midissued/MIDIssued";
 
 function App() {
   return (
@@ -63,10 +65,7 @@ function App() {
                   element={<LifeMemberReport />}
                 />
                 <Route path="/report-patron" element={<PatronReport />} />
-                <Route
-                  path="/report-dy-patron"
-                  element={<DyPatronReport />}
-                />
+                <Route path="/report-dy-patron" element={<DyPatronReport />} />
                 <Route path="/report-event" element={<EventReport />} />
                 <Route
                   path="/report-event-details"
@@ -80,6 +79,11 @@ function App() {
                   path="/report-notregister-notscanned"
                   element={<NotRegisterNotScanned />}
                 />
+                <Route
+                  path="/mid-issued"
+                  element={<MIDIssued />}
+                />
+                <Route path="*" element={<NotFoundPage />} />
               </Routes>
             </ProtectedLayout>
           }
