@@ -1,5 +1,5 @@
-import { Button, Modal, Input, message } from "antd";
-import { useState } from "react";
+import { Input, message } from "antd";
+import { useState, useRef, useEffect } from "react";
 import dayjs from "dayjs";
 import AvatarCell from "../common/AvatarCell";
 import HighlightText from "../common/HighlightText";
@@ -9,33 +9,38 @@ import { useApiMutation } from "../../hooks/useApiMutation";
 import { PANEL_UPDATE_USERS_MID } from "../../api";
 
 const MIDTable = ({ users, imageUrls, fetchUser }) => {
-  const { trigger, loading } = useApiMutation();
-  const [modalVisible, setModalVisible] = useState(false);
-  const [currentUser, setCurrentUser] = useState(null);
+  const { trigger } = useApiMutation();
+  const [editingUserId, setEditingUserId] = useState(null);
   const [midValue, setMidValue] = useState("");
+  const inputRef = useRef(null);
 
-  const openModal = (user) => {
-    setCurrentUser(user);
+  useEffect(() => {
+    if (editingUserId !== null && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [editingUserId]);
+
+  const startEditing = (user) => {
+    setEditingUserId(user.id);
     setMidValue(user.user_mid || "");
-    setModalVisible(true);
   };
 
-  const handleSubmit = async () => {
-    if (!midValue) {
-      message.error("MID cannot be empty");
+  const handleBlur = async (user) => {
+    if (!midValue.trim()) {
+      setEditingUserId(null);
+      setMidValue("");
       return;
     }
 
     try {
       const res = await trigger({
-        url: `${PANEL_UPDATE_USERS_MID}/${currentUser.id}`,
+        url: `${PANEL_UPDATE_USERS_MID}/${user.id}`,
         method: "put",
         data: { user_mid: midValue },
       });
 
       if (res?.code === 201) {
         message.success(res.message || "MID updated successfully");
-        setModalVisible(false);
         fetchUser();
       } else {
         message.error(res.message || "Failed to update MID");
@@ -43,6 +48,18 @@ const MIDTable = ({ users, imageUrls, fetchUser }) => {
     } catch (error) {
       console.error(error);
       message.error(error?.message || "Error updating MID");
+    }
+    setEditingUserId(null);
+    setMidValue("");
+  };
+
+  const handleKeyDown = (e, user) => {
+    if (e.key === "Enter") {
+      e.target.blur();
+    }
+    if (e.key === "Escape") {
+      setEditingUserId(null);
+      setMidValue("");
     }
   };
 
@@ -72,16 +89,31 @@ const MIDTable = ({ users, imageUrls, fetchUser }) => {
       title: "MID",
       dataIndex: "user_mid",
       key: "user_mid",
-      render: (_, user) =>
-        user.user_mid ? (
+      render: (_, user) => {
+        if (editingUserId === user.id) {
+          return (
+            <Input
+              ref={inputRef}
+              size="small"
+              placeholder="Enter MID"
+              value={midValue}
+              onChange={(e) => setMidValue(e.target.value)}
+              onBlur={() => handleBlur(user)}
+              onKeyDown={(e) => handleKeyDown(e, user)}
+              style={{ width: 120 }}
+            />
+          );
+        }
+
+        return user.user_mid ? (
           <HighlightText text={user.user_mid} match={user._match} />
         ) : (
-          <Button
-            type="text"
-            icon={<EditOutlined />}
-            onClick={() => openModal(user)}
+          <EditOutlined
+            style={{ cursor: "pointer", color: "#1890ff" }}
+            onClick={() => startEditing(user)}
           />
-        ),
+        );
+      },
     },
     {
       title: "Name",
@@ -121,42 +153,15 @@ const MIDTable = ({ users, imageUrls, fetchUser }) => {
   ];
 
   return (
-    <>
-      <STTable
-        data={users}
-        columns={columns}
-        rowClassName={(record) =>
-          record.entry_status === "M" ? "bg-green-100" : ""
-        }
-      />
-
-      {/* Modal for updating MID */}
-      <Modal
-        title={`Update MID for ${currentUser?.name || ""}`}
-        open={modalVisible}
-        onCancel={() => setModalVisible(false)}
-        footer={[
-          <Button key="cancel" onClick={() => setModalVisible(false)}>
-            Cancel
-          </Button>,
-          <Button
-            key="submit"
-            type="primary"
-            loading={loading}
-            onClick={handleSubmit}
-          >
-            Update
-          </Button>,
-        ]}
-      >
-        <Input
-          placeholder="Enter MID"
-          value={midValue}
-          onChange={(e) => setMidValue(e.target.value)}
-        />
-      </Modal>
-    </>
+    <STTable
+      data={users}
+      columns={columns}
+      rowClassName={(record) =>
+        record.entry_status === "M" ? "bg-green-100" : ""
+      }
+    />
   );
 };
 
 export default MIDTable;
+
