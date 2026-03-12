@@ -112,6 +112,7 @@ const MIDTable = ({ users, imageUrls, fetchUser }) => {
       title: "Name",
       dataIndex: "name",
       key: "name",
+      width: 250,
       sorter: (a, b) => (a.name || "").localeCompare(b.name || ""),
       render: (_, user) => (
         <HighlightText text={user.name} match={user._match} />
