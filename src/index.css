@@ -13,9 +13,11 @@ body {
 .custom-scroll::-webkit-scrollbar {
   width: 6px;
 }
+
 .custom-scroll::-webkit-scrollbar-thumb {
   border-radius: 3px;
 }
+
 /* .custom-scroll::-webkit-scrollbar-track {
   background: transparent;
 } */
@@ -61,6 +63,7 @@ body {
   border-top-right-radius: 100px;
   border-bottom-right-radius: 100px;
 }
+
 .ant-menu-submenu-popup .ant-menu-item {
   /* border-radius: 100px !important; */
   border-top-right-radius: 100px;
@@ -68,32 +71,38 @@ body {
   overflow: hidden;
   transition: all 0.2s;
 }
+
 .ant-menu-submenu-popup .ant-menu-item::after {
   /* border-radius: 100px !important; */
   border-top-right-radius: 100px;
   border-bottom-right-radius: 100px;
 }
+
 .ant-menu-submenu-popup .ant-menu-item:hover .anticon {
   transform: scale(1.2);
   transition: transform 0.2s ease;
 }
-.ant-table-wrapper .ant-table-thead > tr > th {
+
+.ant-table-wrapper .ant-table-thead>tr>th {
   background-color: #7a2d61;
   color: #ffffff !important;
 }
+
 /* Force submenu hover text to be white */
 .ant-menu-light .ant-menu-submenu-title:hover {
   color: #ffffff !important;
 }
 
 /* Optional: also for open submenu items */
-.ant-menu-light .ant-menu-submenu-selected > .ant-menu-submenu-title {
+.ant-menu-light .ant-menu-submenu-selected>.ant-menu-submenu-title {
   color: #ffffff !important;
   background-color: #7a2d61 !important;
 }
+
 .heading {
   color: #7a2d61 !important;
 }
+
 /* Scrollbar */
 .scrollbar-custom {
   overflow: auto;
@@ -105,38 +114,40 @@ body {
   width: 6px;
   height: 6px;
 }
+
 .scrollbar-custom::-webkit-scrollbar-thumb {
   border-radius: 4px;
 }
+
 .scrollbar-custom::-webkit-scrollbar-track {
   background: transparent;
 }
+
 .ant-menu-light.ant-menu-root.ant-menu-inline,
-.ant-menu-light > .ant-menu.ant-menu-root.ant-menu-inline,
+.ant-menu-light>.ant-menu.ant-menu-root.ant-menu-inline,
 .ant-menu-light.ant-menu-root.ant-menu-vertical,
-.ant-menu-light > .ant-menu.ant-menu-root.ant-menu-vertical {
+.ant-menu-light>.ant-menu.ant-menu-root.ant-menu-vertical {
   border-inline-end: none !important;
 }
-:where(.ant-table-wrapper)
-  .ant-table.ant-table-bordered
-  > .ant-table-container
-  > .ant-table-content
-  > table
-  > thead
-  > tr
-  > th,
-:where(.ant-table-wrapper)
-  .ant-table.ant-table-bordered
-  > .ant-table-container
-  > .ant-table-content
-  > table
-  > tbody
-  > tr
-  > td {
+
+:where(.ant-table-wrapper) .ant-table.ant-table-bordered>.ant-table-container>.ant-table-content>table>thead>tr>th,
+:where(.ant-table-wrapper) .ant-table.ant-table-bordered>.ant-table-container>.ant-table-content>table>tbody>tr>td {
   border-inline-end: none !important;
 }
-.ant-table-tbody > tr:hover > td {
-  background-color: inherit !important;
+
+/* Ensure consistent row hover effect across all tables */
+.ant-table-tbody > tr.ant-table-row:hover > td,
+.ant-table-tbody > tr.ant-table-row > td.ant-table-cell-row-hover,
+.ant-table-tbody > tr.ant-table-row > td.ant-table-cell-hover {
+  background-color: #f6f6f6 !important;
+}
+
+/* Ensure colored rows still show a subtle highlight on hover */
+.ant-table-tbody > tr.bg-green-100:hover > td {
+  background-color: #defce9 !important; /* Slightly darker than bg-green-100 */
+}
+.ant-table-tbody > tr.bg-orange-100:hover > td {
+  background-color: #ffedd5 !important; /* Slightly darker than bg-orange-100 */
 }
 .ant-menu-submenu .ant-menu-light .ant-menu-item-selected,
 .ant-menu-submenu .ant-menu-item-selected {
