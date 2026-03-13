@@ -12,7 +12,8 @@ const MIDTable = ({ users, imageUrls, fetchUser }) => {
   const [editingUserId, setEditingUserId] = useState(null);
   const [midValue, setMidValue] = useState("");
   const [drawerVisible, setDrawerVisible] = useState(false);
-  const [oldUserData, setOldUserData] = useState(null);
+  const [oldUsersData, setOldUsersData] = useState([]);
+  const [cachedOldUsers, setCachedOldUsers] = useState(null);
   const [checkingOldId, setCheckingOldId] = useState(null);
   const [activeUserId, setActiveUserId] = useState(null);
   const inputRef = useRef(null);
@@ -59,25 +60,33 @@ const MIDTable = ({ users, imageUrls, fetchUser }) => {
   const handleCheckOldUser = async (user) => {
     try {
       setCheckingOldId(user.id);
-      const res = await trigger({
-        url: OLD_USERS,
-        method: "get",
-      });
 
-      const oldUsersList = Array.isArray(res?.data) ? res.data : Array.isArray(res) ? res : null;
+      let oldUsersList = cachedOldUsers;
+
+      if (!oldUsersList) {
+        const res = await trigger({
+          url: OLD_USERS,
+          method: "get",
+        });
+        oldUsersList = Array.isArray(res?.data) ? res.data : Array.isArray(res) ? res : null;
+        if (oldUsersList) {
+          setCachedOldUsers(oldUsersList);
+        }
+      }
+
       if (oldUsersList) {
         const currentMobiles = user.mobile
           ? user.mobile.split(/[\/,]+/).map((m) => m.trim().toLowerCase())
           : [];
 
-        const matchedUser = oldUsersList.find((oldU) => {
+        const matchedUsers = oldUsersList.filter((oldU) => {
           if (!oldU.mobile) return false;
           const oldMobile = oldU.mobile.trim().toLowerCase();
           return currentMobiles.some((curr) => curr && oldMobile.includes(curr));
         });
 
-        if (matchedUser) {
-          setOldUserData(matchedUser);
+        if (matchedUsers.length > 0) {
+          setOldUsersData(matchedUsers);
           setDrawerVisible(true);
           setActiveUserId(user.id);
         } else {
@@ -121,6 +130,7 @@ const MIDTable = ({ users, imageUrls, fetchUser }) => {
       title: "Status",
       dataIndex: "user_status",
       key: "user_status",
+      width: 100,
       sorter: (a, b) => {
         const aIsM = a.entry_status === "M" ? 1 : 0;
         const bIsM = b.entry_status === "M" ? 1 : 0;
@@ -215,7 +225,7 @@ const MIDTable = ({ users, imageUrls, fetchUser }) => {
     <div className="flex flex-col xl:flex-row gap-6 w-full items-start">
       <div className={`transition-all duration-300 ${drawerVisible ? "w-full xl:w-3/4" : "w-full"}`}>
         <STTable
-          virtual
+          // virtual
           data={users}
           columns={columns}
           pagination={false}
@@ -232,37 +242,70 @@ const MIDTable = ({ users, imageUrls, fetchUser }) => {
 
       {drawerVisible && (
         <Card
-          className="w-full xl:w-1/4 shadow-md sticky top-4 max-h-[calc(100vh-2rem)] overflow-y-auto"
-          title="Matched Old User Details"
+          className="w-full xl:w-1/4 shadow-sm sticky top-4"
+          style={{ maxHeight: "65vh", overflowY: "auto" }}
+          styles={{ body: { padding: 0 } }}
+          title={
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-medium">Matched users</span>
+              <span className="text-xs text-gray-400 bg-gray-100 rounded-full px-2 py-0.5">
+                {oldUsersData.length}
+              </span>
+            </div>
+          }
           extra={
-            <Button type="text" onClick={() => setDrawerVisible(false)}>
+            <Button type="text" size="small" onClick={() => setDrawerVisible(false)}>
               ✕
             </Button>
           }
         >
-          {oldUserData ? (
-            <Descriptions
-              column={1}
-              bordered
-              size="small"
-              colon={false}
-              labelStyle={{ display: "none" }}
-            >
-              <Descriptions.Item>{oldUserData.full_name}</Descriptions.Item>
-              <Descriptions.Item>{oldUserData.mobile}</Descriptions.Item>
+          {oldUsersData.length > 0 ? (
+            oldUsersData.map((oldU, idx) => (
+              <div key={idx} className="px-4 py-3 border-b border-gray-100 last:border-b-0">
 
-              <Descriptions.Item>
-                <div className="flex gap-2 items-center">
-                  <span>{oldUserData.uid}</span>
-                  <Typography.Text copyable={{ text: oldUserData.uid }} />
+                {/* Name + Flags */}
+                <div className="flex items-center justify-between gap-2 mb-2">
+                  <span className="text-sm font-medium text-gray-800 truncate">
+                    {oldU.full_name}
+                  </span>
+                  {(oldU.flag || oldU.duplicate_flag) && (
+                    <div className="flex items-center gap-1 shrink-0">
+                      {oldU.flag && (
+                        <span className="text-xs bg-amber-50 text-amber-800 border border-amber-200 rounded-full px-2 py-0.5">
+                          {oldU.flag}
+                        </span>
+                      )}
+                      {oldU.duplicate_flag && (
+                        <span className="text-xs bg-red-50 text-red-800 border border-red-200 rounded-full px-2 py-0.5">
+                          {oldU.duplicate_flag}
+                        </span>
+                      )}
+                    </div>
+                  )}
                 </div>
-              </Descriptions.Item>
 
-              <Descriptions.Item>{oldUserData.flag}</Descriptions.Item>
-              <Descriptions.Item>{oldUserData.duplicate_flag}</Descriptions.Item>
-            </Descriptions>
+                {/* Meta Info */}
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-gray-400 w-10 shrink-0">Mobile</span>
+                    <span className="text-xs text-gray-600">{oldU.mobile}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-gray-400 w-10 shrink-0">UID</span>
+                    <code className="text-xs bg-gray-50 border border-gray-200 rounded px-1.5 py-0.5 font-mono text-gray-500 truncate max-w-[110px]">
+                      {oldU.uid}
+                    </code>
+                    <Typography.Text
+                      copyable={{ text: oldU.uid }}
+                      style={{ fontSize: 11, lineHeight: 1 }}
+                    />
+                  </div>
+                </div>
+
+              </div>
+            ))
           ) : (
-            <p>No user data available.</p>
+            <p className="text-xs text-gray-400 text-center py-6">No users found</p>
           )}
         </Card>
       )}
